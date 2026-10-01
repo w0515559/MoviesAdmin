@@ -23,6 +23,7 @@ namespace MoviesAdmin.Models
         [Required]
         public string Synopsis {  get; set; } = string.Empty;
 
+        [Display(Name = "Release Date")]
         [Required]
         public DateOnly ReleaseDate { get; set; } = DateOnly.MinValue; // (defaults to jan 1st 0001 if no date given)
 

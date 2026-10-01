@@ -5,7 +5,7 @@
 }
 
 <h1>List of Movies</h1>
-<hr/>
+<br />
 <p>
     <a asp-action="Create" class="btn btn-primary">Add New Movie</a>
 </p>
@@ -57,9 +57,9 @@
             <td>
                 @Html.DisplayFor(model => item.ReleaseDate)
             </td>
-            <td>
-                @Html.DisplayFor(model => item.Runtime)
-            </td>
+                <td>
+                    @TimeSpan.FromMinutes(item.Runtime).ToString(@"h\hmm\m")
+                </td>
                 <td class="align-middle">
                     <div class="d-flex flex-column gap-2">
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
