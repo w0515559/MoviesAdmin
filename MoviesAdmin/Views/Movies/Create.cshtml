@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create Movie Record</h1>
+<h1>Add Movie To Database</h1>
 
 <hr />
 <div class="row">
@@ -47,13 +47,14 @@
                 <input asp-for="Runtime" class="form-control" />
                 <span asp-validation-for="Runtime" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="mb-3 d-flex justify-content-between">
+                <input type="submit" value="Create Movie Record" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back To List</a>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    
 </div>
