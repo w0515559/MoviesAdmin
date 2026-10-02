@@ -8,16 +8,24 @@ public class MoviesController : Controller
     private readonly MoviesAdminContext _context;
 
     public MoviesController(MoviesAdminContext context)
-    {
+    {   
         _context = context;
     }
 
     // GET: MOVIES
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index(string searchString)
     {
-        return View(await _context.Movie.ToListAsync());
-    }
+        //Console.WriteLine(searchString);
 
+        var movies = _context.Movie.AsQueryable();
+
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            movies = movies.Where(m => m.Title.Contains(searchString) || m.Genre.Contains(searchString));
+        }
+
+        return View(await movies.OrderBy(m => m.Id).ToListAsync()); // Sorted by ID by default
+    }
     // GET: MOVIES/Details/5
     public async Task<IActionResult> Details(int? id)
     {
@@ -146,4 +154,5 @@ public class MoviesController : Controller
     {
         return _context.Movie.Any(e => e.Id == id);
     }
+
 }

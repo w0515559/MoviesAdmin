@@ -15,6 +15,7 @@ namespace MoviesAdmin.Models
         [StringLength(25)] // Longest common genre is 15 characters
         public string Genre { get; set; } = string.Empty;
 
+        [Display(Name = "Age Rating")]
         [Required]
         [StringLength(10)] // 
         public string Rating { get; set; } = string.Empty; // Format: G, PG, PG-13, R

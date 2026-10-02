@@ -1,14 +1,24 @@
 @model IEnumerable<MoviesAdmin.Models.Movie>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Movie List";
 }
 
-<h1>List of Movies</h1>
-<br />
-<p>
+@* H1 and add movie button*@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>List of Movies</h1>
+
     <a asp-action="Create" class="btn btn-primary">Add New Movie</a>
-</p>
+</div>
+
+@* Serch bar and searcj button*@
+@* Will make this update live in the future *@
+<form asp-action="Index" method="get" class="d-flex mb-3">
+    <input type="text" name="searchString" class="form-control me-2" placeholder="Search movies by title or genre..." />
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -27,7 +37,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Synopsis)
             </th>
-            <th>
+            <th class="text-nowrap">
                 @Html.DisplayNameFor(model => model.ReleaseDate)
             </th>
             <th>
@@ -54,8 +64,8 @@
             <td>
                 @Html.DisplayFor(model => item.Synopsis)
             </td>
-            <td>
-                @Html.DisplayFor(model => item.ReleaseDate)
+            <td class="text-nowrap">
+                    @item.ReleaseDate.ToString("MMM dd, yyyy")
             </td>
                 <td>
                     @TimeSpan.FromMinutes(item.Runtime).ToString(@"h\hmm\m")
