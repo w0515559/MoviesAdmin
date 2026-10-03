@@ -23,8 +23,9 @@ public class MoviesController : Controller
             movies = movies.Where(m => m.Title.Contains(searchString) || m.Genre.Contains(searchString));
         }
 
-        return View(await movies.OrderBy(m => m.Id).ToListAsync()); // Sorted by ID by default
+        return View(await movies.OrderBy(m => m.ReleaseDate).ToListAsync()); // Sorted by ReleaseDate by default
     }
+
     // GET: MOVIES/Details/5
     public async Task<IActionResult> Details(int? id)
     {
