@@ -15,7 +15,6 @@ public class MoviesController : Controller
     // GET: MOVIES
     public async Task<IActionResult> Index(string searchString)
     {
-        //Console.WriteLine(searchString);
 
         var movies = _context.Movie.AsQueryable();
 
