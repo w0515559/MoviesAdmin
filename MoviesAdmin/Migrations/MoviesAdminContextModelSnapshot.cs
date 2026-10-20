@@ -31,11 +31,17 @@ namespace MoviesAdmin.Migrations
 
                     b.Property<string>("Genre")
                         .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rating")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<DateOnly>("ReleaseDate")
                         .HasColumnType("date");
@@ -45,11 +51,13 @@ namespace MoviesAdmin.Migrations
 
                     b.Property<string>("Synopsis")
                         .IsRequired()
+                        .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 

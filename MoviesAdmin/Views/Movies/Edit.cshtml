@@ -12,7 +12,11 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ImageUrl" />
+
             <div class="mb-3">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -43,6 +47,10 @@
                 <input asp-for="Runtime" class="form-control" />
                 <span asp-validation-for="Runtime" class="text-danger"></span>
             </div>
+            <div class="mb-3">
+                <img src="@Model.ImageUrl" alt="@Model.Title" class="w-25" />
+            </div>
+
             <div class="mb-3 d-flex justify-content-between">
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <a asp-action="Index" class="btn btn-secondary">Back To List</a>

@@ -31,5 +31,8 @@ namespace MoviesAdmin.Models
         [Range(1, 52000)] // longest movie is 51420 minutes
         [Required]
         public int Runtime { get; set; } // Runtime in minutes 
+
+        // URL for image stored in azure storage
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

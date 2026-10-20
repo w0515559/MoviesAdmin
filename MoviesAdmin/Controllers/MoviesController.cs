@@ -2,14 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesAdmin.Models;
+using MoviesAdmin.Services;
+using System.Reflection.Metadata;
 
 public class MoviesController : Controller
 {
     private readonly MoviesAdminContext _context;
 
-    public MoviesController(MoviesAdminContext context)
+    private readonly IAzureStorageService _blobService; 
+
+    public MoviesController(MoviesAdminContext context, IAzureStorageService blobService)
     {   
         _context = context;
+        _blobService = blobService;
     }
 
     // GET: MOVIES
@@ -50,19 +55,29 @@ public class MoviesController : Controller
         return View();
     }
 
-    // POST: MOVIES/Create
+    // POST: MOVIE/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Title,Genre,Rating,Synopsis,ReleaseDate,Runtime")] Movie movie)
+    public async Task<IActionResult> Create([Bind("Id,Title,Genre,Rating,Synopsis,ReleaseDate,Runtime,ImageUrl")] Movie movie, IFormFile imageFile) // collect inputs and file input from form
     {
+        // Check if the model state is valid before adding the movie to the database
         if (ModelState.IsValid)
         {
+            // Save file in Azure Storage
+            string imageUrl = await _blobService.UploadFileAsync(imageFile, imageFile.FileName); // use the original filename
+            // Save image Url in Movie record
+            movie.ImageUrl = imageUrl;
+
+            // Save record in database
             _context.Add(movie);
             await _context.SaveChangesAsync();
+
+            // Redirect to the Index action after successfully creating the movie
             return RedirectToAction(nameof(Index));
         }
+
         return View(movie);
     }
 
@@ -87,7 +102,7 @@ public class MoviesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Genre,Rating,Synopsis,ReleaseDate,Runtime")] Movie movie)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,Genre,Rating,Synopsis,ReleaseDate,Runtime,ImageUrl")] Movie movie)
     {
         if (id != movie.Id)
         {

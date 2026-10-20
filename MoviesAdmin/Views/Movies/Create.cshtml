@@ -9,7 +9,7 @@
 <hr />
 <div class="row">
     <div class="col-md-5">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="mb-3">
@@ -32,7 +32,7 @@
 
             <div class="mb-3">
                 <label asp-for="Synopsis" class="form-label"></label>
-                <input asp-for="Synopsis" class="form-control" />
+                <textarea asp-for="Synopsis" class="form-control" rows="5"></textarea>
                 <span asp-validation-for="Synopsis" class="text-danger"></span>
             </div>
 
@@ -47,6 +47,11 @@
                 <input asp-for="Runtime" class="form-control" />
                 <span asp-validation-for="Runtime" class="text-danger"></span>
             </div>
+            <div class="mb-3">
+                <label>Image Upload</label>
+                <input type="file" id="ImageFile" name="ImageFile" />
+            </div>
+
             <div class="mb-3 d-flex justify-content-between">
                 <input type="submit" value="Create Movie Record" class="btn btn-primary" />
                 <a asp-action="Index" class="btn btn-secondary">Back To List</a>

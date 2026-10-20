@@ -33,3 +33,13 @@ body {
 .logo {
     height: 45px
 }
+
+.thumbnail {
+    width: 120px;
+    height: auto;
+}
+
+.DetailsImg {
+    max-width: 220px;
+    height: auto
+}
