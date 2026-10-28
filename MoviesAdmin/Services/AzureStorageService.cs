@@ -20,10 +20,10 @@ namespace MoviesAdmin.Services
             containerName = _configuration["AzureStorage:ContainerName"] ?? throw new InvalidOperationException("Missing configuration: AzureStorage:ContainerName");
 
             // get Azure Storage connection string
-            string connectionStrings = _configuration["AzureStorage:ConnectionStrings"] ?? throw new InvalidOperationException("Missing configuration: AzureStorage:ConnectionString");
+            string connectionString = _configuration["AzureStorage:ConnectionString"] ?? throw new InvalidOperationException("Missing configuration: AzureStorage:ConnectionString");
 
             // initialize Azure blob client
-            blobServiceClient = new BlobServiceClient(connectionStrings);
+            blobServiceClient = new BlobServiceClient(connectionString);
         }
 
         public async Task<string> UploadFileAsync(IFormFile file, string fileName)

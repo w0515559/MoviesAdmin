@@ -1,24 +1,39 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace MoviesAdmin.Models
 {
     public class Movie
     {
+        // Primary key
         [Required]
         public int Id { get; set; } // Unique identifier for the movie (auto-generated)
+
+
+
+        // foreign key for genre
+        [Display(Name = "Genre")]
+        public int GenreId { get; set; }
+
+        // navigation property
+        [ValidateNever]
+        public Genre Genre { get; set; } = null!;
+
+        // foreign key for Rating
+        [Display(Name = "Age Rating")]
+        public int AudienceRatingId { get; set; }
+
+        // navigation property
+        [ValidateNever]
+        public AudienceRating AudienceRating { get; set; } = null!;
+
+
+
+
 
         [Required]
         [StringLength(250)] // Longest movie title is 201 characters long
         public string Title { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(25)] // Longest common genre is 15 characters
-        public string Genre { get; set; } = string.Empty;
-
-        [Display(Name = "Age Rating")]
-        [Required]
-        [StringLength(10)] // 
-        public string Rating { get; set; } = string.Empty; // Format: G, PG, PG-13, R
 
         [StringLength(5000)] // Some movies have a 10 page synopsis
         [Required]

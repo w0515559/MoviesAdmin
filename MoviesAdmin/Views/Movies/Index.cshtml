@@ -32,10 +32,10 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre)
+                @Html.DisplayNameFor(model => model.GenreId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Rating)
+                @Html.DisplayNameFor(model => model.AudienceRatingId)
             </th>
             <th class="text-nowrap">
                 @Html.DisplayNameFor(model => model.ReleaseDate)
@@ -60,10 +60,10 @@
                 @Html.DisplayFor(model => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(model => item.Genre)
+                @Html.DisplayFor(model => item.Genre.Title)
             </td>
             <td>
-                @Html.DisplayFor(model => item.Rating)
+                @Html.DisplayFor(model => item.AudienceRating.Title)
             </td>
             <td class="text-nowrap">
                     @item.ReleaseDate.ToString("MMM dd, yyyy")
@@ -72,10 +72,18 @@
                     @TimeSpan.FromMinutes(item.Runtime).ToString(@"h\hmm\m")
                 </td>
                 <td class="align-middle">
-                    <div class="d-flex flex-column gap-2">
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Details</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Delete</a>
+                    <div class="d-flex flex-column gap-2" style="width: 60px">
+                        
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Details</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Delete</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Details</a>
+                        }
                     </div>
                 </td>
         </tr>
