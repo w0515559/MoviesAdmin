@@ -9,13 +9,11 @@ namespace MoviesAdmin.Models
         [Required]
         public int Id { get; set; } // Unique identifier for the movie (auto-generated)
 
-
-
         // foreign key for genre
         [Display(Name = "Genre")]
         public int GenreId { get; set; }
 
-        // navigation property
+        // navigation property for genre
         [ValidateNever]
         public Genre Genre { get; set; } = null!;
 
@@ -23,10 +21,12 @@ namespace MoviesAdmin.Models
         [Display(Name = "Age Rating")]
         public int AudienceRatingId { get; set; }
 
-        // navigation property
+        // navigation property for rating
         [ValidateNever]
         public AudienceRating AudienceRating { get; set; } = null!;
 
+        // navigation property for critic reviews
+        public List<CriticReview> CriticReviews { get; set; } = new List<CriticReview>();
 
 
 

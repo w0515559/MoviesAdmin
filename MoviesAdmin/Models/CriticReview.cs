@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MoviesAdmin.Models
@@ -6,8 +7,19 @@ namespace MoviesAdmin.Models
     public class CriticReview
     {
 
+        // primary key
         [Required]
         public int Id { get; set; } // Unique identifier for the review (auto-generated)
+
+
+        // foreign key to Movie
+        public int MovieId { get; set; }
+
+        // nav property
+        [ValidateNever]
+        public Movie Movie { get; set; } = null!;
+
+
 
         [StringLength(2500)] // Maximum length for the review description
         [Required]
