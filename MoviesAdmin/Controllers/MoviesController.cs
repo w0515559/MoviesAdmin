@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MoviesAdmin.Models;
 using MoviesAdmin.Services;
-using System.Reflection.Metadata;
 
 [Authorize]
 public class MoviesController : Controller
@@ -34,7 +33,7 @@ public class MoviesController : Controller
             movies = movies.Where(m => m.Title.Contains(searchString) || m.Genre.Title.Contains(searchString));
         }
 
-        return View(await movies.OrderBy(m => m.ReleaseDate).ToListAsync()); // Sorted by ReleaseDate by default
+        return View(await movies.OrderByDescending(m => m.ReleaseDate).ToListAsync()); // Sorted by ReleaseDate by default
     }
 
     // GET: MOVIES/Details/5
@@ -46,6 +45,8 @@ public class MoviesController : Controller
         }
 
         var movie = await _context.Movie
+            .Include(m => m.Genre)
+            .Include(m => m.AudienceRating)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (movie == null)
         {
@@ -56,14 +57,15 @@ public class MoviesController : Controller
     }
 
     // GET: MOVIES/Create
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         // create a select list for the categories
-        var genres = _context.Genre.ToList();
+        var genres = _context.Genre.ToList().OrderBy(g => g.Title);
         ViewBag.GenreId = new SelectList(genres, "Id", "Title");
 
         // audience rating
-        var rating = _context.AudienceRating.ToList();
+        var rating = _context.AudienceRating.ToList().OrderBy(r => r.Id);
         ViewBag.AudienceRatingId = new SelectList(rating, "Id", "Title");
 
         return View();
@@ -72,6 +74,7 @@ public class MoviesController : Controller
     // POST: MOVIE/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("Id,Title,GenreId,AudienceRatingId,Synopsis,ReleaseDate,Runtime,ImageUrl")] Movie movie, IFormFile imageFile) // collect inputs and file input from form
@@ -116,6 +119,14 @@ public class MoviesController : Controller
         {
             return NotFound();
         }
+
+        // create a select list for the categories
+        var genres = _context.Genre.ToList().OrderBy(g => g.Title);
+        ViewBag.GenreId = new SelectList(genres, "Id", "Title");
+
+        // audience rating
+        var rating = _context.AudienceRating.ToList().OrderBy(r => r.Id);
+        ViewBag.AudienceRatingId = new SelectList(rating, "Id", "Title");
 
         var movie = await _context.Movie.FindAsync(id);
         if (movie == null)
@@ -171,7 +182,10 @@ public class MoviesController : Controller
         }
 
         var movie = await _context.Movie
+            .Include(m => m.Genre)
+            .Include(m => m.AudienceRating)
             .FirstOrDefaultAsync(m => m.Id == id);
+
         if (movie == null)
         {
             return NotFound();
@@ -186,7 +200,11 @@ public class MoviesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int? id)
     {
-        var movie = await _context.Movie.FindAsync(id);
+        var movie = await _context.Movie
+         .Include(m => m.Genre)
+         .Include(m => m.AudienceRating)
+         .FirstOrDefaultAsync(m => m.Id == id);
+
         if (movie != null)
         {
             _context.Movie.Remove(movie);

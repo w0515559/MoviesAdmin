@@ -21,7 +21,7 @@ namespace MoviesAdmin.Models
 
 
 
-        [StringLength(2500)] // Maximum length for the review description
+        [StringLength(1000)] // Maximum length for the review description
         [Required]
         public string Description { get; set; } = string.Empty; // Review description
 
@@ -29,6 +29,7 @@ namespace MoviesAdmin.Models
         [Required]
         public int Rating { get; set; } // Rating (1 - 5 stars)
 
+        [DisplayName("Publish")]
         [Required]
         public bool IsPublished { get; set; } // Indicates if the review is published
 
@@ -39,7 +40,7 @@ namespace MoviesAdmin.Models
 
         [Display(Name = "Date Created")]
         [Required]
-        public DateTime CreatedDate { get; set; } // Date when the review was created
+        public DateTime CreatedDate { get; set; } = DateTime.Now; // Date when the review was created
 
     }
 }

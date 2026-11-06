@@ -7,8 +7,11 @@
 @* H1 and add movie button*@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1>List of Movies</h1>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Add New Movie</a>
+    }
 
-    <a asp-action="Create" class="btn btn-primary">Add New Movie</a>
 </div>
 
 @* Search bar and searcj button*@

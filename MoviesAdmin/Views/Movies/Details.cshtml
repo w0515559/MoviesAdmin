@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Html
 @model MoviesAdmin.Models.Movie
 
 @{
@@ -19,26 +20,33 @@
         </dd>
 
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genre)
+            @Html.DisplayNameFor(model => model.GenreId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre)
+            @Html.DisplayFor(model => model.Genre.Title)
         </dd>
 
         <dt class = "col-sm-2">
-        @Html.DisplayNameFor(model => model.AudienceRating)
+            @Html.DisplayNameFor(model => model.AudienceRatingId)
         </dt>
         <dd class = "col-sm-10">
-        @Html.DisplayFor(model => model.AudienceRating)
+            @Html.DisplayFor(model => model.AudienceRating.Title)
         </dd>
 
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Synopsis)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Synopsis)
-        </dd>
 
+        @{
+            var descriptionWithBreaks = new HtmlString(Model.Synopsis
+                .Replace("\r\n", "<br />")
+                .Replace("\n", "<br />")
+                .Replace("\r", "<br />"));
+        }
+
+        @descriptionWithBreaks
+    </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ReleaseDate)
         </dt>
@@ -58,6 +66,10 @@
     @if (User.IsInRole("Admin"))
     {
         <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
-    }
+    } else if (User.IsInRole("Critic")) 
+    {
+        <a asp-controller="CriticReviews" asp-action="Create" asp-route-id="@Model?.Id" class="btn btn-primary">Create Review</a>
+    } 
+
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

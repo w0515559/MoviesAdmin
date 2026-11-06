@@ -4,6 +4,14 @@
 
 <div class="text-center">
     <a><img style="height: 111px" src="Images/321Logo.png" /></a>
-    <h1>Coming Soon!</h1>
+    @if (User.Identity.IsAuthenticated)
+    {
+        
+    } else
+    {
+        <h1>Access Restricted <br /> Log in to continue</h1>
+    }
+
+    
 
 </div>
