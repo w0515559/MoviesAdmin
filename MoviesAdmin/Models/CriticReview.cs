@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace MoviesAdmin.Models
 {
+    // Each movie only allows 1 review per user https://learn.microsoft.com/en-us/ef/core/modeling/indexes?tabs=data-annotations
+    [Index(nameof(MovieId), nameof(CreatedBy), IsUnique = true)]
     public class CriticReview
     {
 
@@ -25,21 +28,19 @@ namespace MoviesAdmin.Models
         [Required]
         public string Description { get; set; } = string.Empty; // Review description
 
-        [Range(1, 5)] // Rating must be between 1 and 5
+        [Range(0, 5)] // Rating must be between 0 and 5
         [Required]
-        public int Rating { get; set; } // Rating (1 - 5 stars)
+        public int Rating { get; set; } // Rating (0 - 5 stars)
 
-        [DisplayName("Publish")]
+        [DisplayName("Published")]
         [Required]
         public bool IsPublished { get; set; } // Indicates if the review is published
 
         [DisplayName("Created By")] 
         [StringLength(40)] // Maximum length for the username of the reviewer
-        [Required]
         public string CreatedBy { get; set; } = string.Empty; // User who created the review
 
         [Display(Name = "Date Created")]
-        [Required]
         public DateTime CreatedDate { get; set; } = DateTime.Now; // Date when the review was created
 
     }

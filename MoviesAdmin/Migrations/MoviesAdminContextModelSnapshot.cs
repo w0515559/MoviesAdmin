@@ -71,7 +71,8 @@ namespace MoviesAdmin.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MovieId");
+                    b.HasIndex("MovieId", "CreatedBy")
+                        .IsUnique();
 
                     b.ToTable("CriticReview");
                 });

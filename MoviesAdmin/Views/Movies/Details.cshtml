@@ -26,6 +26,9 @@
             @Html.DisplayFor(model => model.Genre.Title)
         </dd>
 
+        <dt class="col-sm-2">Published Reviews</dt>
+        <dd class="col-sm-10">@ViewBag.PublishedReviewCount</dd>
+
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.AudienceRatingId)
         </dt>
@@ -66,10 +69,11 @@
     @if (User.IsInRole("Admin"))
     {
         <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
-    } else if (User.IsInRole("Critic")) 
+    }
+    else if (User.IsInRole("Critic") && ViewBag.HasReviewed != true) // dont show buton if they already reviewed 
     {
-        <a asp-controller="CriticReviews" asp-action="Create" asp-route-id="@Model?.Id" class="btn btn-primary">Create Review</a>
-    } 
+        <a asp-controller="CriticReviews" asp-action="Create" asp-route-movieId="@Model?.Id" class="btn btn-primary">Create Review</a>
+    }
 
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

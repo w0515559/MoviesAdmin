@@ -10,12 +10,12 @@
 <hr />
 <div class="row">
     <div class="col-md-7">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="ImageUrl" />
+            <input type="hidden" asp-for="ImageUrl" /> 
 
             <div class="mb-3">
                 <label asp-for="Title" class="control-label"></label>
@@ -34,7 +34,7 @@
             </div>
             <div class="mb-3">
                 <label asp-for="Synopsis" class="control-label"></label>
-                <input asp-for="Synopsis" class="form-control" />
+                <textarea asp-for="Synopsis" class="form-control" rows="5"></textarea>
                 <span asp-validation-for="Synopsis" class="text-danger"></span>
             </div>
             <div class="mb-3">
@@ -47,9 +47,23 @@
                 <input asp-for="Runtime" class="form-control" />
                 <span asp-validation-for="Runtime" class="text-danger"></span>
             </div>
+
             <div class="mb-3">
-                <img src="@Model.ImageUrl" alt="@Model.Title" class="w-25" />
+                <label>Change Image </label>
+                <input type="file" id="ImageFile" name="ImageFile" />
             </div>
+
+
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <div class="mb-3">
+                    <img src="@Model.ImageUrl" alt="@Model.Title" class="w-25" />
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">Movie has no poster.</p>
+            }
 
             <div class="mb-3 d-flex justify-content-between">
                 <input type="submit" value="Save" class="btn btn-primary" />

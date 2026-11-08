@@ -3,20 +3,18 @@
 @{
     ViewData["Title"] = "Critic Reviews";
 }
-
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Critic Reviews</h1>
-    <a asp-action="Create" class="btn btn-primary">Add New Critic Review</a>
-</div>
-
+ <h1>Your Reviews</h1>
+<div class="d-flex justify-content-between align-items-center mb-3"></div>
+       
 <table class="table">
     <thead>
         <tr>
+            <th>
+                <!-- Blank space for image -->
+            </th>
             <th>Movie</th>
-            <th>@Html.DisplayNameFor(model => model.Description)</th>
             <th>@Html.DisplayNameFor(model => model.Rating)</th>
             <th>@Html.DisplayNameFor(model => model.IsPublished)</th>
-            <th>@Html.DisplayNameFor(model => model.CreatedBy)</th>
             <th>@Html.DisplayNameFor(model => model.CreatedDate)</th>
             <th></th>
         </tr>
@@ -25,16 +23,29 @@
 @foreach (var item in Model)
 {
         <tr>
+            <td>
+                    <img src="@item.Movie.ImageUrl" alt="@item.Movie.Title" class="thumbnail" />
+            </td>
+
             <td>@item.Movie?.Title</td>
-            <td>@Html.DisplayFor(modelItem => item.Description)</td>
             <td>@Html.DisplayFor(modelItem => item.Rating)</td>
             <td>@Html.DisplayFor(modelItem => item.IsPublished)</td>
-            <td>@Html.DisplayFor(modelItem => item.CreatedBy)</td>
             <td>@Html.DisplayFor(modelItem => item.CreatedDate)</td>
             <td class="text-end">
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+
+                <div class="d-flex flex-column gap-2" style="width: 60px"> 
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Details</a>
+                        @if (!item.IsPublished)
+                        {
+                            
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                        }
+
+
+                    
+                </div>
+
             </td>
         </tr>
 }

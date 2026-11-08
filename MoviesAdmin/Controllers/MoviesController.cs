@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MoviesAdmin;
 using MoviesAdmin.Models;
 using MoviesAdmin.Services;
 
@@ -48,10 +49,21 @@ public class MoviesController : Controller
             .Include(m => m.Genre)
             .Include(m => m.AudienceRating)
             .FirstOrDefaultAsync(m => m.Id == id);
+
         if (movie == null)
         {
             return NotFound();
         }
+
+        // check if user already reviewed the movie
+        var userId = User.GetUserId();
+        ViewBag.HasReviewed = await _context.CriticReview
+            .AnyAsync(r => r.MovieId == id && r.CreatedBy == userId);
+
+
+        // count the number of reviews on the movie
+        ViewBag.PublishedReviewCount = await _context.CriticReview
+            .CountAsync(r => r.MovieId == id && r.IsPublished);
 
         return View(movie);
     }
@@ -80,10 +92,10 @@ public class MoviesController : Controller
     public async Task<IActionResult> Create([Bind("Id,Title,GenreId,AudienceRatingId,Synopsis,ReleaseDate,Runtime,ImageUrl")] Movie movie, IFormFile imageFile) // collect inputs and file input from form
     {
         // Validate if image file is uploaded
-        if (imageFile == null)
+        if (imageFile == null || imageFile.Length == 0)
         {
             // Manually add a validation failure
-            ModelState.AddModelError("ImageFile", "The image file upload is required.");
+            ModelState.AddModelError(string.Empty, "The image file upload is required.");
         }
 
         // Check if the model state is valid before adding the movie to the database
@@ -96,7 +108,7 @@ public class MoviesController : Controller
 
 
             // Save file in Azure Storage
-            string imageUrl = await _blobService.UploadFileAsync(imageFile, uniqueFileName); // use the original filename
+            string imageUrl = await _blobService.UploadFileAsync(imageFile, uniqueFileName); 
             // Save image Url in Movie record
             movie.ImageUrl = imageUrl;
 
@@ -108,6 +120,8 @@ public class MoviesController : Controller
             return RedirectToAction(nameof(Index));
         }
 
+        ViewBag.GenreId = new SelectList(_context.Genre.OrderBy(g => g.Title), "Id", "Title", movie.GenreId);
+        ViewBag.AudienceRatingId = new SelectList(_context.AudienceRating.OrderBy(r => r.Id), "Id", "Title", movie.AudienceRatingId);
         return View(movie);
     }
 
@@ -119,6 +133,7 @@ public class MoviesController : Controller
         {
             return NotFound();
         }
+
 
         // create a select list for the categories
         var genres = _context.Genre.ToList().OrderBy(g => g.Title);
@@ -142,33 +157,35 @@ public class MoviesController : Controller
     [Authorize(Roles = "Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,GenreId,AudienceRatingId,Synopsis,ReleaseDate,Runtime,ImageUrl")] Movie movie)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Title,GenreId,AudienceRatingId,Synopsis,ReleaseDate,Runtime,ImageUrl")] Movie movie, IFormFile? imageFile)
     {
-        if (id != movie.Id)
-        {
-            return NotFound();
-        }
+        if (id != movie.Id) return NotFound();
+
 
         if (ModelState.IsValid)
         {
             try
             {
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    var extension = Path.GetExtension(imageFile.FileName);
+                    var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+                    movie.ImageUrl = await _blobService.UploadFileAsync(imageFile, uniqueFileName);
+                }
+
                 _context.Update(movie);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MovieExists(movie.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!MovieExists(movie.Id)) return NotFound();
+                throw;
             }
             return RedirectToAction(nameof(Index));
         }
+
+        ViewBag.GenreId = new SelectList(_context.Genre.OrderBy(g => g.Title), "Id", "Title", movie.GenreId);
+        ViewBag.AudienceRatingId = new SelectList(_context.AudienceRating.OrderBy(r => r.Id), "Id", "Title", movie.AudienceRatingId);
         return View(movie);
     }
 
