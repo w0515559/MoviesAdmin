@@ -1,13 +1,7 @@
 ﻿using MoviesAdmin.Models;
 using Microsoft.EntityFrameworkCore;
-
 namespace MoviesAdmin.Services
 {
-    public interface IUserSnapshotService
-    {
-        Task AddUserAsync(string userId, string email, string name);
-    }
-
     public class UserSnapshotService : IUserSnapshotService
     {
         private readonly MoviesAdminContext _context;
@@ -41,4 +35,3 @@ namespace MoviesAdmin.Services
             await _context.SaveChangesAsync();
         }
     }
-}
